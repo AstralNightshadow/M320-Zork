@@ -8,56 +8,55 @@ import java.util.Stack;
 /**
  * Class Game - the main class of the "Zork" game.
  *
- * Author:  Michael Kolling, 1.1, March 2000
+ * Author: Michael Kolling, 1.1, March 2000
  * refactoring: Rinaldo Lanza, September 2020
  */
 
 public class Game {
 
 	private Parser parser;
-private Room currentRoom;
-private Room foyer, hallway1, hallway2, library, securityRoom, masterBedroom, livingRoom, kitchen, guestBedroom, staffQuarters;
+	private Room currentRoom;
+	private Room foyer, hallway1, hallway2, library, securityRoom, masterBedroom, livingRoom, kitchen, guestBedroom,
+			staffQuarters;
 
-public Game() {
+	public Game() {
 
-    parser = new Parser(System.in);
+		parser = new Parser(System.in);
 
-    // create rooms
-    foyer = new Room("the central foyer of the mansion");
-    hallway1 = new Room("a hallway connecting the foyer to the library and master bedroom");
-    hallway2 = new Room("a hallway connecting the foyer to the kitchen, guest bedroom, and staff quarters");
-    library = new Room("a grand library filled with ancient books");
-    securityRoom = new Room("a secure room with surveillance equipment");
-    masterBedroom = new Room("a luxurious master bedroom");
-    livingRoom = new Room("a comfortable and elegant living room");
-    kitchen = new Room("a spacious and well-equipped kitchen");
-    guestBedroom = new Room("a cozy guest bedroom");
-    staffQuarters = new Room("the living space for the mansion's staff");
+		// create rooms
+		foyer = new Room("the central foyer of the mansion");
+		hallway1 = new Room("a hallway connecting the foyer to the library and master bedroom");
+		hallway2 = new Room("a hallway connecting the foyer to the kitchen, guest bedroom, and staff quarters");
+		library = new Room("a grand library filled with ancient books");
+		securityRoom = new Room("a secure room with surveillance equipment");
+		masterBedroom = new Room("a luxurious master bedroom");
+		livingRoom = new Room("a comfortable and elegant living room");
+		kitchen = new Room("a spacious and well-equipped kitchen");
+		guestBedroom = new Room("a cozy guest bedroom");
+		staffQuarters = new Room("the living space for the mansion's staff");
 
-    // initialise room exits
-    foyer.setExits(hallway1, hallway2, livingRoom, null);
-    hallway1.setExits(library, null, foyer, masterBedroom);
-    hallway2.setExits(kitchen, staffQuarters, guestBedroom, foyer);
-    library.setExits(null, securityRoom, null, hallway1);
-    securityRoom.setExits(null, null, null, library);
-    masterBedroom.setExits(null, hallway1, null, null);
-    livingRoom.setExits(null, null, null, foyer);
-    kitchen.setExits(null, null, hallway2, null);
-    guestBedroom.setExits(null, hallway2, null, null);
-    staffQuarters.setExits(null, null, null, hallway2);
+		// initialise room exits
+		foyer.setExits(hallway1, hallway2, livingRoom, null);
+		hallway1.setExits(library, null, foyer, masterBedroom);
+		hallway2.setExits(kitchen, staffQuarters, guestBedroom, foyer);
+		library.setExits(null, securityRoom, null, hallway1);
+		securityRoom.setExits(null, null, null, library);
+		masterBedroom.setExits(null, hallway1, null, null);
+		livingRoom.setExits(null, null, null, foyer);
+		kitchen.setExits(null, null, hallway2, null);
+		guestBedroom.setExits(null, hallway2, null, null);
+		staffQuarters.setExits(null, null, null, hallway2);
 
-    currentRoom = foyer; // start game in the foyer
-}
-
-
+		currentRoom = foyer; // start game in the foyer
+	}
 
 	/**
-	 *  Main play routine.  Loops until end of play.
+	 * Main play routine. Loops until end of play.
 	 */
 	public void play() {
 		printWelcome();
 
-		// Enter the main command loop.  Here we repeatedly read commands and
+		// Enter the main command loop. Here we repeatedly read commands and
 		// execute them until the game is over.
 		boolean finished = false;
 		while (!finished) {
