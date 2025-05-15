@@ -18,12 +18,13 @@ public class Game {
 	private Room currentRoom;
 	private Room foyer, hallway1, hallway2, library, securityRoom, masterBedroom, livingRoom, kitchen, guestBedroom,
 			staffQuarters;
+	private ArrayList<String> inventory = new ArrayList<>();
 
 	public Game() {
 
 		parser = new Parser(System.in);
 
-		// create rooms
+		 // Create rooms
 		foyer = new Room("the central foyer of the mansion");
 		hallway1 = new Room("a hallway connecting the foyer to the library and master bedroom");
 		hallway2 = new Room("a hallway connecting the foyer to the kitchen, guest bedroom, and staff quarters");
@@ -35,7 +36,7 @@ public class Game {
 		guestBedroom = new Room("a cozy guest bedroom");
 		staffQuarters = new Room("the living space for the mansion's staff");
 
-		// initialise room exits
+		 // Initialize room exits
 		foyer.setExits(hallway1, hallway2, livingRoom, null);
 		hallway1.setExits(library, null, foyer, masterBedroom);
 		hallway2.setExits(kitchen, staffQuarters, guestBedroom, foyer);
@@ -47,7 +48,15 @@ public class Game {
 		guestBedroom.setExits(null, hallway2, null, null);
 		staffQuarters.setExits(null, null, null, hallway2);
 
-		currentRoom = foyer; // start game in the foyer
+		 // Add items to rooms
+		foyer.addItem("key");
+		library.addItem("ancient book");
+		kitchen.addItem("knife");
+		masterBedroom.addItem("jewelry");
+		guestBedroom.addItem("pillow");
+		staffQuarters.addItem("cleaning supplies");
+
+		currentRoom = foyer; // Start game in the foyer
 	}
 
 	/**
@@ -84,10 +93,12 @@ public class Game {
 		String commandWord = command.getCommandWord();
 		if (commandWord.equals("help")) {
 			printHelp();
-
 		} else if (commandWord.equals("go")) {
 			goRoom(command);
-
+		} else if (commandWord.equals("take")) {
+			takeItem(command);
+		} else if (commandWord.equals("inventory")) { // New command
+			showInventory();
 		} else if (commandWord.equals("quit")) {
 			if (command.hasSecondWord()) {
 				System.out.println("Quit what?");
@@ -121,6 +132,33 @@ public class Game {
 			else {
 				currentRoom = nextRoom;
 				System.out.println(currentRoom.longDescription());
+			}
+		}
+	}
+
+	private void takeItem(Command command) {
+		if (!command.hasSecondWord()) {
+			System.out.println("Take what?");
+			return;
+		}
+
+		String item = command.getSecondWord();
+		if (currentRoom.getItems().contains(item)) {
+			currentRoom.removeItem(item);
+			inventory.add(item);
+			System.out.println("You picked up: " + item);
+		} else {
+			System.out.println("That item is not here.");
+		}
+	}
+
+	private void showInventory() {
+		if (inventory.isEmpty()) {
+			System.out.println("Your inventory is empty.");
+		} else {
+			System.out.println("You are carrying:");
+			for (String item : inventory) {
+				System.out.println("- " + item);
 			}
 		}
 	}
